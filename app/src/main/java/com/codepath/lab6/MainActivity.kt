@@ -4,12 +4,14 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.codepath.lab6.databinding.ActivityMainBinding
 import com.codepath.asynchttpclient.AsyncHttpClient
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.serialization.json.Json
 import okhttp3.Headers
 import org.json.JSONException
@@ -34,7 +36,25 @@ class MainActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        replaceFragment(ParksFragment())
+        val fragmentManager : FragmentManager = supportFragmentManager
+        val parksFragment : ParksFragment = ParksFragment()
+        val campgroundFragment : CampgroundFragment = CampgroundFragment()
+
+        val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottom_navigation)
+
+        // handle navigation selection
+        bottomNavigationView.setOnItemSelectedListener { item ->
+            lateinit var fragment: Fragment
+            when (item.itemId) {
+                R.id.nav_parks -> fragment = parksFragment
+                R.id.nav_campgrounds -> fragment = campgroundFragment
+            }
+            replaceFragment(fragment)
+            true
+        }
+
+        // Set default selection
+        bottomNavigationView.selectedItemId = R.id.nav_parks
 
     }
 
